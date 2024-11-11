@@ -1,0 +1,62 @@
+#include<stdio.h>
+void fifoPageReplacement(int pages[], int numPages, int numFrames) {
+    int frames[numFrames];
+    int pageFaults = 0;     
+    int front = 0;
+    for(int i=0; i<numFrames; i++) {
+        frames[i] = -1;
+    }
+
+    printf("FIFO Page Replacement\n");
+    printf("Page Reference String: ");
+    for (int i=0; i<numPages; i++) {
+        printf("%d ",pages[i]);
+    }
+    printf("\n\n");
+
+    for (int i=0; i<numPages; i++) {
+        int page = pages[i];
+        int pageFound = 0;
+
+        for (int j=0; j<numFrames; j++) {
+            if (frames[j] == page) {
+                pageFound = 1;
+                break;
+            }
+        }
+
+        if (!pageFound) {
+            pageFaults++;
+            
+            frames[front] = page;
+            front = (front+1) % numFrames;
+        }
+
+        printf("After processing page %d: ", page);
+        for (int k = 0; k < numFrames; k++) {
+            if (frames[k] == -1) {
+                printf("- ");
+            } else {
+                printf("%d ", frames[k]);
+            }
+        }
+        printf("\n");
+    }
+
+    printf("\nTotal Page Faults: %d\n", pageFaults);
+}
+
+int main() {
+    int numPages, numFrames;
+    printf("Enter number of pages: ");
+    scanf("%d", &numPages);
+    printf("Enter number of frames: ");
+    scanf("%d", &numFrames);
+    int pages[numPages];
+    printf("Enter the page reference string: ");
+    for (int i = 0; i < numPages; i++) {
+        scanf("%d", &pages[i]);
+    }
+    fifoPageReplacement(pages, numPages, numFrames);
+    return 0;
+}
